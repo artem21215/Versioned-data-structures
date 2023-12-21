@@ -9,11 +9,4 @@ FetchContent_MakeAvailable(googletest)
 add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
-add_executable(multiply_test test-cases/HelloWorldTest.cpp)
-
-target_link_libraries(multiply_test
- PRIVATE
-  GTest::GTest
-  multiply)
-
-add_test(multiply_gtests multiply_test)
+add_subdirectory(test-cases)

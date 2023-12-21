@@ -5,4 +5,6 @@ target_sources(versioned-data-app
         "src/main.cpp"
 )
 
-target_include_directories(versioned-data-app PUBLIC "include")
+target_include_directories(versioned-data-app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+link_directories(${CMAKE_BINARY_DIR}/lib/version-data-structures/Debug)
+target_link_libraries(versioned-data-app PRIVATE versioned-data-lib)
