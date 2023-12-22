@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: cmake generation
-      run: cmake
+        run: cmake .
       - name: build
-      run: cmake --build .
-      -name: test
-      run:
-      ctest --output-on-failure
+        run: cmake --build .
+      - name: test
+        run:
+          - ctest --output-on-failure
