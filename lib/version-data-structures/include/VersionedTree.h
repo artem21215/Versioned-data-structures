@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -23,11 +24,11 @@ namespace VersionedTree {
 
     template <class Type> class EmptyNode : public INode<Type>, std::enable_shared_from_this<EmptyNode<Type>> {
     public:
-        EmptyNode() : INode() {}
+        EmptyNode() : INode<Type>() {}
 
-        void SetParent(const std::shared_ptr<const INode> &parent) override { m_parent = shared_from_this(); }
+        void SetParent(const std::shared_ptr<const INode<Type>> &) override { this->m_parent = this->shared_from_this(); }
 
-        [[nodiscard]] std::shared_ptr<const INode> GetParent() const override { return shared_from_this(); }
+        [[nodiscard]] std::shared_ptr<const INode<Type>> GetParent() const override { return this->shared_from_this(); }
 
         [[nodiscard]] Type GetValue() const override { throw std::logic_error("Cannot return data from empty node!"); }
 
@@ -38,19 +39,19 @@ namespace VersionedTree {
     public:
         explicit Node(const Type &data) : m_data(data) {}
 
-        void SetParent(const std::shared_ptr<const INode> &parent) override {
+        void SetParent(const std::shared_ptr<const INode<Type>> &parent) override {
             if (!parent) {
                 throw std::logic_error(
                     "Parent must be not nullptr, for empty node you should use VersionedTree::EmptyNode class!");
             }
-            m_parent = parent;
+            this->m_parent = parent;
         }
 
-        [[nodiscard]] std::shared_ptr<const INode> GetParent() const override {
-            if (!m_parent) {
+        [[nodiscard]] std::shared_ptr<const INode<Type>> GetParent() const override {
+            if (!this->m_parent) {
                 throw std::logic_error("Node hasn't parrent, unknown case!");
             }
-            return m_parent;
+            return this->m_parent;
         }
 
         [[nodiscard]] Type GetValue() const override { return m_data; }
