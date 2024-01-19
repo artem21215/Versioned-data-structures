@@ -26,7 +26,9 @@ namespace VersionedTree {
     public:
         EmptyNode() : INode<Type>() {}
 
-        void SetParent(const std::shared_ptr<const INode<Type>> &) override { this->m_parent = this->shared_from_this(); }
+        void SetParent(const std::shared_ptr<const INode<Type>> &) override {
+            this->m_parent = this->shared_from_this();
+        }
 
         [[nodiscard]] std::shared_ptr<const INode<Type>> GetParent() const override { return this->shared_from_this(); }
 

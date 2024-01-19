@@ -33,7 +33,7 @@ TEST(VersionedTreeTests, EmptyTree) {
     EXPECT_TRUE(afterDelete);
     EXPECT_TRUE(afterDelete->IsEmpty());
     try {
-        const auto value = afterDelete->GetValue();
+        [[maybe_unused]] const auto value = afterDelete->GetValue();
         FAIL();
     } catch (const std::logic_error &e) {
         EXPECT_EQ(e.what(), std::string("Cannot return data from empty node!"));
