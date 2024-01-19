@@ -22,7 +22,7 @@ TEST(VersionedTreeTests, testConvert) {
 
 TEST(VersionedTreeTests, EmptyTree) {
     auto tree = VersionedTree::Tree<float>{};
-    EXPECT_NO_FATAL_FAILURE(tree.ConvertToVector(nullptr));
+    EXPECT_NO_FATAL_FAILURE(const auto vec = tree.ConvertToVector(nullptr));
     const auto rootFirst = tree.GetRoot();
     EXPECT_TRUE(rootFirst);
     EXPECT_TRUE(rootFirst->IsEmpty());
@@ -41,34 +41,4 @@ TEST(VersionedTreeTests, EmptyTree) {
     EXPECT_TRUE(node);
     EXPECT_FALSE(node->IsEmpty());
     EXPECT_NEAR(node->GetValue(), 5.5, 1e-10);
-}
-
-TEST(VersionedNodeTests, NodeOperations) {
-    const std::string goodBye = "GoodBye2023";
-    const std::string hello = "Hello2024";
-
-    const auto root = std::make_shared<VersionedTree::Node<std::string>>(goodBye);
-    EXPECT_EQ(root->GetValue(), goodBye);
-
-    VersionedTree::Node<std::string> nextNode{hello};
-    nextNode.SetParent(root);
-    EXPECT_EQ(nextNode.GetValue(), hello);
-    const auto parent = nextNode.GetParent();
-    ASSERT_TRUE(parent);
-    EXPECT_EQ(parent->GetValue(), goodBye);
-    try {
-        const auto parentOfRoot = parent->GetParent();
-        FAIL();
-    } catch (const std::logic_error &e) {
-        ASSERT_EQ(e.what(), std::string("Node hasn't parrent, unknown case!"));
-    }
-
-    try {
-        nextNode.SetParent(nullptr);
-        FAIL();
-    } catch (const std::logic_error &e) {
-        ASSERT_EQ(
-            e.what(),
-            std::string("Parent must be not nullptr, for empty node you should use VersionedTree::EmptyNode class!"));
-    }
 }

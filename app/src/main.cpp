@@ -1,13 +1,14 @@
 #include <iostream>
 
 #include "VersionedTree.h"
+#include "VersionedTreeNode.h"
 
 int main() {
     auto tree = VersionedTree::Tree<int>{};
     const auto firstNode = tree.AddNode(5, tree.GetRoot());
     const auto secondNode = tree.AddNode(6, firstNode);
     auto thirdNode = tree.AddNode(6, secondNode);
-    auto fourthNode = tree.AddNode(8, thirdNode);
+    const auto fourthNode = tree.AddNode(8, thirdNode);
     const auto afterDelete = tree.DeleteNode(thirdNode);
 
     const auto curSequence = tree.ConvertToVector(afterDelete);
