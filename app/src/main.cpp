@@ -4,7 +4,7 @@
 #include "VersionedTreeNode.h"
 
 int main() {
-    auto tree = VersionedTree::Tree<int>{};
+    auto tree = VersionedStructures::Tree<int>{};
     const auto firstNode = tree.AddNode(5, tree.GetRoot());
     const auto secondNode = tree.AddNode(6, firstNode);
     auto thirdNode = tree.AddNode(6, secondNode);

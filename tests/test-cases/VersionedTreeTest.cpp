@@ -4,7 +4,7 @@
 #include "VersionedTree.h"
 
 TEST(VersionedTreeTests, testConvert) {
-    auto tree = VersionedTree::Tree<int>{};
+    auto tree = VersionedStructures::Tree<int>{};
     const auto someNodes = tree.AddNode(6, tree.AddNode(6, tree.AddNode(5, tree.GetRoot())));
     auto nodeToDelete = tree.AddNode(8, someNodes);
     const auto nodeAfterDelete = tree.DeleteNode(nodeToDelete);
@@ -21,7 +21,7 @@ TEST(VersionedTreeTests, testConvert) {
 }
 
 TEST(VersionedTreeTests, EmptyTree) {
-    auto tree = VersionedTree::Tree<float>{};
+    auto tree = VersionedStructures::Tree<float>{};
     EXPECT_NO_FATAL_FAILURE(const auto vec = tree.ConvertToVector(nullptr));
     const auto rootFirst = tree.GetRoot();
     EXPECT_TRUE(rootFirst);

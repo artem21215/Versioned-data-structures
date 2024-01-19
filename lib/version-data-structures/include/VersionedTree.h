@@ -7,7 +7,7 @@
 
 #include "VersionedTreeNode.h"
 
-namespace VersionedTree {
+namespace VersionedStructures {
     template <class NodeType> class Tree {
     public:
         Tree() : m_root(std::make_shared<EmptyNode<NodeType>>()) {}

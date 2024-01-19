@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace VersionedTree {
+namespace VersionedStructures {
     template <class Type> class INode {
     public:
         virtual void SetParent(const std::shared_ptr<const INode> &parent) = 0;
