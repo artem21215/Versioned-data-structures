@@ -12,7 +12,7 @@ namespace VersionedStructures {
     public:
         Stack() { m_backPointer = m_tree.GetRoot(); }
 
-        Type BackValue() {
+        Type BackValue() const {
             if (m_backPointer->IsEmpty()) {
                 throw std::logic_error("Cannot get back value for empty stack!");
             }
@@ -26,6 +26,16 @@ namespace VersionedStructures {
         [[nodiscard]] bool IsEmpty() const { return m_backPointer->IsEmpty(); }
 
         [[nodiscard]] std::vector<Type> ConvertToVector() const { return m_tree.ConvertToVector(m_backPointer); }
+
+        [[nodiscard]] std::vector<Type> ConvertToVector(const std::shared_ptr<const INode<Type>> &version) const {
+            return m_tree.ConvertToVector(version);
+        }
+
+        std::shared_ptr<const INode<Type>> GetCurrentVersion() const { return m_backPointer; }
+
+        Tree<Type>& GetTree(){
+            return m_tree;
+        }
 
     private:
         Tree<Type> m_tree;
