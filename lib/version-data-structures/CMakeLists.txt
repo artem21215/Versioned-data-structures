@@ -7,8 +7,16 @@ set_target_properties(versioned-data-lib PROPERTIES
 
 target_sources(versioned-data-lib
                PUBLIC
+<<<<<<< HEAD
                include/VersionedTree.h src/VersionedTree.cpp include/VersionedTreeNode.h include/VersionedStack.h
                include/StackThreadController.h include/StackHistory.h include/StackState.h
+=======
+               include/HashSet.h
+               include/VersionedStack.h
+               include/VersionedTree.h
+               include/VersionedTreeNode.h
+               src/VersionedTree.cpp
+>>>>>>> 4073975 (Add draft HashSet class)
                )
 
 target_include_directories(versioned-data-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
