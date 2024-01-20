@@ -1,19 +1,21 @@
 #include <iostream>
 
+#include "VersionedStack.h"
 #include "VersionedTree.h"
 #include "VersionedTreeNode.h"
 
 int main() {
-    auto tree = VersionedStructures::Tree<int>{};
-    const auto firstNode = tree.AddNode(5, tree.GetRoot());
-    const auto secondNode = tree.AddNode(6, firstNode);
-    auto thirdNode = tree.AddNode(6, secondNode);
-    const auto fourthNode = tree.AddNode(8, thirdNode);
-    const auto afterDelete = tree.DeleteNode(thirdNode);
-
-    const auto curSequence = tree.ConvertToVector(afterDelete);
-    for (const auto &elem : curSequence) {
+    auto stack = VersionedStructures::Stack<int>();
+    stack.Pop();
+    stack.Push(5);
+    stack.Push(5);
+    stack.Push(8);
+    stack.Push(3);
+    stack.Pop();
+    const auto convertedStack = stack.ConvertToVector();
+    for (const auto &elem : convertedStack) {
         std::cout << elem << std::endl;
     }
+
     return 0;
 }
