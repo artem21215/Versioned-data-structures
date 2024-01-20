@@ -13,7 +13,7 @@ namespace VersionedStructures {
         Tree() : m_root(std::make_shared<EmptyNode<NodeType>>()) {}
 
         [[nodiscard]] std::shared_ptr<const INode<NodeType>>
-        AddNode(const NodeType &nodeData, const std::shared_ptr<const INode<NodeType>> &parrentNode) {
+        AddNode(const NodeType &nodeData, const std::shared_ptr<const INode<NodeType>> &parrentNode) const {
             auto newNode = Node<NodeType>(nodeData);
             try {
                 newNode.SetParent(parrentNode);
@@ -25,7 +25,7 @@ namespace VersionedStructures {
         }
 
         [[nodiscard]] std::shared_ptr<const INode<NodeType>>
-        DeleteNode(std::shared_ptr<const INode<NodeType>> &nodeToDelete) {
+        DeleteNode(std::shared_ptr<const INode<NodeType>> &nodeToDelete) const {
             if (!nodeToDelete) {
                 std::cout << "Node for deletting is nullptr! Nothing was done!" << std::endl;
                 return nodeToDelete->GetParent();
@@ -36,7 +36,8 @@ namespace VersionedStructures {
 
         [[nodiscard]] std::shared_ptr<const INode<NodeType>> GetRoot() const { return m_root; }
 
-        [[nodiscard]] std::vector<NodeType> ConvertToVector(const std::shared_ptr<const INode<NodeType>> &finishNode) {
+        [[nodiscard]] std::vector<NodeType>
+        ConvertToVector(const std::shared_ptr<const INode<NodeType>> &finishNode) const {
             std::vector<NodeType> result;
             if (!finishNode) {
                 return result;

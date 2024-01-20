@@ -7,10 +7,10 @@ TEST(VersionedNodeTests, NodeOperations) {
     const std::string goodBye = "GoodBye2023";
     const std::string hello = "Hello2024";
 
-    const auto root = std::make_shared<VersionedTree::Node<std::string>>(goodBye);
+    const auto root = std::make_shared<VersionedStructures::Node<std::string>>(goodBye);
     EXPECT_EQ(root->GetValue(), goodBye);
 
-    VersionedTree::Node<std::string> nextNode{hello};
+    VersionedStructures::Node<std::string> nextNode{hello};
     nextNode.SetParent(root);
     EXPECT_EQ(nextNode.GetValue(), hello);
     const auto parent = nextNode.GetParent();

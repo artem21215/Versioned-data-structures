@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace VersionedStructures {
-    template <class Type> class INode {
+    template <class Type> class INode : public std::enable_shared_from_this<INode<Type>> {
     public:
         virtual void SetParent(const std::shared_ptr<const INode> &parent) = 0;
 
@@ -15,16 +15,11 @@ namespace VersionedStructures {
         [[nodiscard]] virtual Type GetValue() const = 0;
 
         [[nodiscard]] virtual bool IsEmpty() const = 0;
-
-    protected:
-        std::shared_ptr<const INode<Type>> m_parent;
     };
 
-    template <class Type> class EmptyNode : public INode<Type>, std::enable_shared_from_this<EmptyNode<Type>> {
+    template <class Type> class EmptyNode : public INode<Type> {
     public:
-        void SetParent(const std::shared_ptr<const INode<Type>> &) override {
-            this->m_parent = this->shared_from_this();
-        }
+        void SetParent(const std::shared_ptr<const INode<Type>> &) override {}
 
         [[nodiscard]] std::shared_ptr<const INode<Type>> GetParent() const override { return this->shared_from_this(); }
 
@@ -58,5 +53,6 @@ namespace VersionedStructures {
 
     private:
         Type m_data;
+        std::shared_ptr<const INode<Type>> m_parent;
     };
 }

@@ -1,5 +1,10 @@
 add_executable(versioned-data-app)
 
+set_target_properties(versioned-data-app PROPERTIES
+            CXX_STANDARD 23
+            CXX_EXTENSIONS OFF
+            )
+
 target_sources(versioned-data-app
     PRIVATE
         "src/main.cpp"
