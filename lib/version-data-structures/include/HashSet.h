@@ -5,11 +5,9 @@
 
 namespace VersionedStructures {
 
-    template <typename T>
-    class HashSet {
+    template <typename T> class HashSet {
     public:
-        HashSet(const size_t bucketSize = 10001) : m_buckets(bucketSize) {
-        }
+        explicit HashSet(const size_t bucketSize = 10001) : m_buckets(bucketSize) {}
 
         void Insert(const T &item) {
             if (!Exists(item)) {
@@ -49,17 +47,11 @@ namespace VersionedStructures {
             return Find(item) != m_buckets[hash].end();
         }
 
-        [[nodiscard]] size_t Size() const {
-            return size;
-        }
+        [[nodiscard]] size_t Size() const { return size; }
 
-        [[nodiscard]] size_t BucketSize() const {
-            return m_buckets.size();
-        }
+        [[nodiscard]] size_t BucketSize() const { return m_buckets.size(); }
 
-        [[nodiscard]] bool IsEmpty() const {
-            return size == 0;
-        }
+        [[nodiscard]] bool IsEmpty() const { return size == 0; }
 
         [[nodiscard]] std::vector<T> ConvertToVector() const {
             std::vector<T> vec;
@@ -77,9 +69,7 @@ namespace VersionedStructures {
             return std::find(m_buckets[hash].begin(), m_buckets[hash].end(), item);
         }
 
-        size_t GetHash(const T &item) const {
-            return std::hash<T>{}(item) % m_buckets.size();
-        }
+        size_t GetHash(const T &item) const { return std::hash<T>{}(item) % m_buckets.size(); }
 
         std::vector<std::list<T>> m_buckets;
         size_t size = 0;
