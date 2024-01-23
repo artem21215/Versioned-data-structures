@@ -10,7 +10,7 @@ TEST(VersionedSetTests, VersionedSetSingleThread) {
     const size_t threadCount = 4;
     const std::vector<size_t> threadId = {0, 1, 2, 3};
 
-    auto versionedSet = VersionedStructures::VersionedSet<int>(threadCount);
+    auto versionedSet = VersionedStructures::Set<int>(threadCount);
     EXPECT_NO_FATAL_FAILURE(versionedSet.Erase(threadId[1], 1));
     EXPECT_TRUE(versionedSet.IsEmpty(threadId[1]));
 
@@ -46,7 +46,7 @@ TEST(VersionedSetTests, VersionedSet) {
     const size_t threadCount = 4;
     const std::vector<size_t> threadId = {0, 1, 2, 3};
 
-    auto versionedSet = VersionedStructures::VersionedSet<int>(threadCount);
+    auto versionedSet = VersionedStructures::Set<int>(threadCount);
     EXPECT_NO_FATAL_FAILURE(versionedSet.Insert(threadId[0], 1));
     EXPECT_NO_FATAL_FAILURE(versionedSet.Insert(threadId[1], 1));
     EXPECT_EQ(versionedSet.Size(threadId[0]), 1);

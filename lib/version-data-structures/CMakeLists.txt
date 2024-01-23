@@ -11,6 +11,7 @@ target_sources(versioned-data-lib
                include/StackHistory.h 
                include/StackState.h
                include/StackThreadController.h 
+               include/VersionedQueue.h
                include/VersionedStack.h
                include/VersionedSet.h
                include/VersionedTree.h

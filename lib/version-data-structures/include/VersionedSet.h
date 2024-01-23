@@ -28,10 +28,9 @@ namespace VersionedStructures {
         std::vector<std::stack<HistoryNode<T>>> threadHistory;
     };
 
-    template <typename T> class VersionedSet {
+    template <typename T> class Set {
     public:
-        explicit VersionedSet(const size_t threadsCount)
-            : m_threadsCount(threadsCount), m_threadsStateId(threadsCount) {
+        explicit Set(const size_t threadsCount) : m_threadsCount(threadsCount), m_threadsStateId(threadsCount) {
             m_states.push_back(std::make_shared<VersionState<T>>(threadsCount));
         }
 

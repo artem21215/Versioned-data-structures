@@ -1,6 +1,7 @@
 add_executable(test-cases 
     HashSetTest.cpp
     StackHistoryTest.cpp
+    VersionedQueueTest.cpp
     VersionedSetTest.cpp
     VersionedStackTest.cpp
     VersionedTreeTest.cpp 
