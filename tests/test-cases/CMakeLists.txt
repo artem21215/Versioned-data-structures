@@ -1,14 +1,19 @@
-add_executable(test-cases VersionedTreeTest.cpp VersionedTreeNodeTest.cpp VersionedStackTest.cpp
-               StackHistoryTest.cpp)
+add_executable(test-cases 
+    HashSetTest.cpp
+    StackHistoryTest.cpp
+    VersionedStackTest.cpp
+    VersionedTreeTest.cpp 
+    VersionedTreeNodeTest.cpp 
+)
 
 set_target_properties(test-cases PROPERTIES
-            CXX_STANDARD 23
-            CXX_EXTENSIONS OFF
-            )
+    CXX_STANDARD 23
+    CXX_EXTENSIONS OFF
+)
 
 target_compile_options(test-cases PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
 target_include_directories(test-cases PUBLIC ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
