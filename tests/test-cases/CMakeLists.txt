@@ -4,7 +4,7 @@ add_executable(test-cases
     VersionedStackTest.cpp
     VersionedTreeTest.cpp 
     VersionedTreeNodeTest.cpp 
-
+)
 
 set_target_properties(test-cases PROPERTIES
     CXX_STANDARD 23
