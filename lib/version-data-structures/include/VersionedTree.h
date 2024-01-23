@@ -34,6 +34,19 @@ namespace VersionedStructures {
             return nodeToDelete->GetParent();
         }
 
+        [[nodiscard]] std::shared_ptr<const INode<NodeType>>
+        FindChild(const std::shared_ptr<const INode<NodeType>> &parent,
+                  const std::shared_ptr<const INode<NodeType>> &child) const {
+
+            auto curNode = child;
+            for (; curNode->GetParent() != parent; curNode = curNode->GetParent()) {
+                if (curNode == m_root) {
+                    return curNode;
+                }
+            }
+            return curNode;
+        }
+
         [[nodiscard]] std::shared_ptr<const INode<NodeType>> GetRoot() const { return m_root; }
 
         [[nodiscard]] std::vector<NodeType>
@@ -45,6 +58,23 @@ namespace VersionedStructures {
 
             auto current = finishNode;
             while (!current->IsEmpty()) {
+                result.push_back(current->GetValue());
+                current = current->GetParent();
+            }
+            std::reverse(result.begin(), result.end());
+            return result;
+        }
+
+        [[nodiscard]] std::vector<NodeType>
+        ConvertToVector(const std::shared_ptr<const INode<NodeType>> &startNode,
+                        const std::shared_ptr<const INode<NodeType>> &finishNode) const {
+            std::vector<NodeType> result;
+            if (!finishNode) {
+                return result;
+            }
+
+            auto current = finishNode;
+            while (!current->IsEmpty() && current != startNode->GetParent()) {
                 result.push_back(current->GetValue());
                 current = current->GetParent();
             }
