@@ -11,9 +11,9 @@
 namespace VersionedStructures {
     template <class Type> class Stack {
     public:
-        Stack() {}
+        Stack() { m_state = std::make_shared<StackState<Type>>(); }
 
-        Stack(const std::shared_ptr<StackState<Type>> &state) : m_state(state) {}
+        explicit Stack(const std::shared_ptr<StackState<Type>> &state) : m_state(state) {}
 
         Type BackValue() const {
             if (m_state->GetEndState()->IsEmpty()) {
