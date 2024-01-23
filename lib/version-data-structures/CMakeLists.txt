@@ -12,6 +12,7 @@ target_sources(versioned-data-lib
                include/StackState.h
                include/StackThreadController.h 
                include/VersionedStack.h
+               include/VersionedSet.h
                include/VersionedTree.h
                include/VersionedTreeNode.h
                src/VersionedTree.cpp

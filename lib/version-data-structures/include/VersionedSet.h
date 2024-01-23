@@ -1,84 +1,110 @@
+#include <fstream>
 #include <stack>
 #include <stdexcept>
 
 #include "HashSet.h"
 
 namespace VersionedStructures {
-
+    std::ofstream out("C:\\Users\\xinull\\projects\\Versioned-data-structures\\build\\CMakeFiles\\tests\\test-"
+                      "cases\\temp.txt");
     enum class HistoryAction {
         Insert,
         Erase,
         Merge,
     };
 
+    template <typename T> struct HistoryNode {
+        HistoryNode(const HistoryAction &newAction, std::optional<T> &&newValue) : action(newAction), value(newValue) {}
+        const HistoryAction action;
+        const std::optional<T> value;
+    };
+
+    template <typename T> struct VersionState {
+        VersionState(size_t threadsCount)
+            : deletedSets(threadsCount), threadSets(threadsCount), threadHistory(threadsCount) {}
+        HashSet<T> mergedSet;
+        std::vector<HashSet<T>> deletedSets;
+        std::vector<HashSet<T>> threadSets;
+        std::vector<std::stack<HistoryNode<T>>> threadHistory;
+    };
+
     template <typename T> class VersionedSet {
     public:
         explicit VersionedSet(const size_t threadsCount)
             : m_threadsCount(threadsCount), m_threadsStateId(threadsCount) {
-            m_states.push_back(std::make_shared<VersionState>(threadsCount));
+            m_states.push_back(std::make_shared<VersionState<T>>(threadsCount));
         }
 
-        void Insert(const size_t thread, const T &item) {
+        void Insert(const size_t thread, const T &item, bool writeToHistory = true) {
             ThreadIdCheck(thread);
             if (GetDeletedSet(thread).Exists(item)) {
                 GetDeletedSet(thread).Erase(item);
-                UpdateHistory(thread, HistoryAction::Insert, item);
+                if (writeToHistory) {
+                    UpdateHistory(thread, HistoryAction::Insert, item);
+                }
                 return;
             }
             if (!GetMergedSet(thread).Exists(item)) {
                 if (!GetThreadSet(thread).Exists(item)) {
                     GetThreadSet(thread).Insert(item);
-                    UpdateHistory(thread, HistoryAction::Insert, item);
+                    if (writeToHistory) {
+                        UpdateHistory(thread, HistoryAction::Insert, item);
+                    }
                 }
             }
         }
 
-        void Erase(const size_t thread, const T &item) {
+        void Erase(const size_t thread, const T &item, bool writeToHistory = true) {
             ThreadIdCheck(thread);
             if (GetMergedSet(thread).Exists(thread)) {
                 GetDeletedSet(thread).Insert(item);
-                UpdateHistory(thread, HistoryAction::Erase, item);
+                if (writeToHistory) {
+                    UpdateHistory(thread, HistoryAction::Erase, item);
+                }
                 return;
             }
             if (GetThreadSet(thread).Exists(item)) {
                 GetThreadSet(thread).Erase(item);
-                UpdateHistory(thread, HistoryAction::Erase, item);
+                if (writeToHistory) {
+                    UpdateHistory(thread, HistoryAction::Erase, item);
+                }
             }
         }
 
         void Merge() {
-            auto newState = std::make_shared<VersionedSet>(m_threadsCount);
+            auto newState = std::make_shared<VersionState<T>>(m_threadsCount);
 
             for (size_t threadId = 0; threadId < m_threadsCount; threadId++) {
-                newState.mergedSet.Merge(GetActualSet(threadId));
+                newState->mergedSet.Merge(GetActualSet(threadId));
             }
 
             m_states.push_back(newState);
 
             for (size_t threadId = 0; threadId < m_threadsCount; threadId++) {
-                UpdateHistory(threadId, HistoryAction::Merge, std::nullopt);
                 m_threadsStateId[threadId]++;
+                UpdateHistory(threadId, HistoryAction::Merge, std::nullopt);
             }
         }
 
         bool Undo(const size_t thread) {
-            if (GetHistory(thread).size() > 0) {
+            if (GetHistory(thread).size() == 0) {
                 return false;
             }
             const auto lastStep = PopLastStep(thread);
+
             switch (lastStep.action) {
             case HistoryAction::Insert:
                 if (lastStep.value) {
-                    Erase(*lastStep.value, thread);
+                    Erase(thread, *lastStep.value, false);
                 }
                 break;
             case HistoryAction::Erase:
                 if (lastStep.value) {
-                    Insert(*lastStep.value, thread);
+                    Insert(thread, *lastStep.value, false);
                 }
                 break;
             case HistoryAction::Merge:
-                while ((m_threadsStateId[thread] > 0) && (GetHistory(thread).size() > 0)) {
+                while ((m_threadsStateId[thread] > 0) && (GetHistory(thread).size() == 0)) {
                     m_threadsStateId[thread]--;
                 }
                 break;
@@ -112,22 +138,6 @@ namespace VersionedStructures {
         }
 
     private:
-        struct HistoryNode {
-            HistoryNode(const HistoryAction &newAction, std::optional<T> &&newValue)
-                : action(newAction), value(newValue) {}
-            const HistoryAction action;
-            const std::optional<T> value;
-        };
-
-        struct VersionState {
-            VersionState(size_t threadsCount)
-                : deletedSets(threadsCount), threadSets(threadsCount), threadHistory(threadsCount) {}
-            HashSet<T> mergedSet;
-            std::vector<HashSet<T>> deletedSets;
-            std::vector<HashSet<T>> threadSets;
-            std::vector<std::stack<HistoryNode>> threadHistory;
-        };
-
         HashSet<T> GetActualSet(const size_t thread) const {
             HashSet<T> tempHashSet;
             tempHashSet.Merge(GetMergedSet(thread));
@@ -140,17 +150,19 @@ namespace VersionedStructures {
             GetHistory(thread).push(HistoryNode(action, std::move(value)));
         }
 
-        HistoryNode PopLastStep(const size_t thread) {
+        HistoryNode<T> PopLastStep(const size_t thread) {
             const auto lastStep = GetHistory(thread).top();
-            GetHistory(thread).Pop();
+            GetHistory(thread).pop();
             return lastStep;
         }
 
-        std::shared_ptr<VersionState> GetState(const size_t thread) const { return m_states[m_threadsStateId[thread]]; }
+        std::shared_ptr<VersionState<T>> GetState(const size_t thread) const {
+            return m_states[m_threadsStateId[thread]];
+        }
         HashSet<T> &GetMergedSet(const size_t thread) const { return GetState(thread)->mergedSet; }
         HashSet<T> &GetDeletedSet(const size_t thread) const { return GetState(thread)->deletedSets[thread]; }
         HashSet<T> &GetThreadSet(const size_t thread) const { return GetState(thread)->threadSets[thread]; }
-        std::stack<HistoryNode> &GetHistory(const size_t thread) const {
+        std::stack<HistoryNode<T>> &GetHistory(const size_t thread) const {
             return GetState(thread)->threadHistory[thread];
         }
 
@@ -162,6 +174,6 @@ namespace VersionedStructures {
 
         const size_t m_threadsCount;
         std::vector<size_t> m_threadsStateId;
-        std::vector<std::shared_ptr<VersionState>> m_states;
+        std::vector<std::shared_ptr<VersionState<T>>> m_states;
     };
 }
