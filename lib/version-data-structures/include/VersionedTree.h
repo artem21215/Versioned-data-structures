@@ -25,7 +25,7 @@ namespace VersionedStructures {
         }
 
         [[nodiscard]] std::shared_ptr<const INode<NodeType>>
-        DeleteNode(std::shared_ptr<const INode<NodeType>> &nodeToDelete) const {
+        DeleteNode(const std::shared_ptr<const INode<NodeType>> &nodeToDelete) const {
             if (!nodeToDelete) {
                 std::cout << "Node for deletting is nullptr! Nothing was done!" << std::endl;
                 return nodeToDelete->GetParent();
